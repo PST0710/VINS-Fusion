@@ -181,20 +181,19 @@ void PoseGraph::addKeyFrame(KeyFrame* cur_kf, bool flag_detect_loop)
 
     if (SAVE_LOOP_PATH)
     {
-        ofstream loop_path_file(VINS_RESULT_PATH, ios::app);
-        loop_path_file.setf(ios::fixed, ios::floatfield);
-        loop_path_file.precision(0);
-        loop_path_file << cur_kf->time_stamp * 1e9 << ",";
-        loop_path_file.precision(5);
-        loop_path_file  << P.x() << ","
-              << P.y() << ","
-              << P.z() << ","
-              << Q.w() << ","
-              << Q.x() << ","
-              << Q.y() << ","
-              << Q.z() << ","
-              << endl;
-        loop_path_file.close();
+        ofstream loop_path_file2(VINS_RESULT_PATH, ios::app);
+        loop_path_file2.setf(ios::fixed, ios::floatfield);
+        loop_path_file2.precision(9);
+        loop_path_file2 << cur_kf->time_stamp << " ";
+        loop_path_file2.precision(6);
+        loop_path_file2  << P.x() << " "
+              << P.y() << " "
+              << P.z() << " "
+              << Q.x() << " "
+              << Q.y() << " "
+              << Q.z() << " "
+              << Q.w() << endl;
+        loop_path_file2.close();
     }
     //draw local connection
     if (SHOW_S_EDGE)
@@ -340,7 +339,7 @@ int PoseGraph::detectLoop(KeyFrame* keyframe, int frame_index)
     {
         int feature_num = keyframe->keypoints.size();
         cv::resize(keyframe->image, compressed_image, cv::Size(376, 240));
-        putText(compressed_image, "feature_num:" + to_string(feature_num), cv::Point2f(10, 10), CV_FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(255));
+        putText(compressed_image, "feature_num:" + to_string(feature_num), cv::Point2f(10, 10), cv::FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(255));
         image_pool[frame_index] = compressed_image;
     }
     TicToc tmp_t;
@@ -361,7 +360,7 @@ int PoseGraph::detectLoop(KeyFrame* keyframe, int frame_index)
     {
         loop_result = compressed_image.clone();
         if (ret.size() > 0)
-            putText(loop_result, "neighbour score:" + to_string(ret[0].Score), cv::Point2f(10, 50), CV_FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255));
+            putText(loop_result, "neighbour score:" + to_string(ret[0].Score), cv::Point2f(10, 50), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255));
     }
     // visual loop result 
     if (DEBUG_IMAGE)
@@ -371,7 +370,7 @@ int PoseGraph::detectLoop(KeyFrame* keyframe, int frame_index)
             int tmp_index = ret[i].Id;
             auto it = image_pool.find(tmp_index);
             cv::Mat tmp_image = (it->second).clone();
-            putText(tmp_image, "index:  " + to_string(tmp_index) + "loop score:" + to_string(ret[i].Score), cv::Point2f(10, 50), CV_FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255));
+            putText(tmp_image, "index:  " + to_string(tmp_index) + "loop score:" + to_string(ret[i].Score), cv::Point2f(10, 50), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255));
             cv::hconcat(loop_result, tmp_image, loop_result);
         }
     }
@@ -388,7 +387,7 @@ int PoseGraph::detectLoop(KeyFrame* keyframe, int frame_index)
                 {
                     auto it = image_pool.find(tmp_index);
                     cv::Mat tmp_image = (it->second).clone();
-                    putText(tmp_image, "loop score:" + to_string(ret[i].Score), cv::Point2f(10, 50), CV_FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(255));
+                    putText(tmp_image, "loop score:" + to_string(ret[i].Score), cv::Point2f(10, 50), cv::FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(255));
                     cv::hconcat(loop_result, tmp_image, loop_result);
                 }
             }
@@ -424,7 +423,7 @@ void PoseGraph::addKeyFrameIntoVoc(KeyFrame* keyframe)
     {
         int feature_num = keyframe->keypoints.size();
         cv::resize(keyframe->image, compressed_image, cv::Size(376, 240));
-        putText(compressed_image, "feature_num:" + to_string(feature_num), cv::Point2f(10, 10), CV_FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(255));
+        putText(compressed_image, "feature_num:" + to_string(feature_num), cv::Point2f(10, 10), cv::FONT_HERSHEY_SIMPLEX, 0.4, cv::Scalar(255));
         image_pool[keyframe->index] = compressed_image;
     }
 
@@ -828,20 +827,19 @@ void PoseGraph::updatePath()
 
         if (SAVE_LOOP_PATH)
         {
-            ofstream loop_path_file(VINS_RESULT_PATH, ios::app);
-            loop_path_file.setf(ios::fixed, ios::floatfield);
-            loop_path_file.precision(0);
-            loop_path_file << (*it)->time_stamp * 1e9 << ",";
-            loop_path_file.precision(5);
-            loop_path_file  << P.x() << ","
-                  << P.y() << ","
-                  << P.z() << ","
-                  << Q.w() << ","
-                  << Q.x() << ","
-                  << Q.y() << ","
-                  << Q.z() << ","
-                  << endl;
-            loop_path_file.close();
+            ofstream loop_path_file2(VINS_RESULT_PATH, ios::app);
+            loop_path_file2.setf(ios::fixed, ios::floatfield);
+            loop_path_file2.precision(9);
+            loop_path_file2 << (*it)->time_stamp << " ";
+            loop_path_file2.precision(6);
+            loop_path_file2  << P.x() << " "
+                  << P.y() << " "
+                  << P.z() << " "
+                  << Q.x() << " "
+                  << Q.y() << " "
+                  << Q.z() << " "
+                  << Q.w() << endl;
+            loop_path_file2.close();
         }
         //draw local connection
         if (SHOW_S_EDGE)
