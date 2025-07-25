@@ -177,7 +177,42 @@ For commercial inquiries, please contact Shaojie Shen <eeshaojieATust.hk>.
 
 
 
-#### ===============================for my notes=============================  
+#### =============================== for my notes =============================  
+
+#### 1、跑vins 代码个人理解  
+1）运行结果结果及理解笔记   
+![基础vins结果](./support_files/image/my_vins_result.jpg)
+![vins_node_no_loop](./support_files/image/vins_node_no_loop.jpg)
+![vins_node_and_loop](./support_files/image/vins_node_and_loop.jpg)
+
+2）tum数据集不同格式（使用evo性能评估工具时常用的格式）   
+![tum数据格式](./support_files/image/tum_format.png)   
+![标准tum数据含义](./support_files/image/tum_concept.jpg)    
 
 
+#### 2、使用SLAM中evo评估工具 
+参考： https://blog.csdn.net/weixin_40599145/article/details/126735873?ops_request_misc=&request_id=&biz_id=102&utm_term=vins-fusion%E6%80%8E%E4%B9%88%E4%BF%9D%E5%AD%98.csv%E6%96%87%E4%BB%B6&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-3-126735873.142%5Ev94%5Econtrol&spm=1018.2226.3001.4187  
+1）安装evo工具：  
+pip3 install evo --upgrade --no-binary evo
 
+2）统一输出位姿数据和真值数据为tum（8列）数据格式：timestamp px py pz qx qy qz qw   
+evo_traj euroc data.csv --save_as_tum   （data.csv为动捕真值数据，在.zip压缩包里）
+
+3）输出位姿数据则在不同的yaml配置文件中output_path参数对应的路径里，输出文件为 ：     
+vio.csv(slam算法的vins_node节点在没有闭环检测loop_fusion下的输出位姿结果"时间戳 + 位置 + 姿态四元数")    
+vio_loop.csv(slam算法的vins_node节点在有闭环检测loop_fusion下的输出位姿结果"时间戳 + 位置 + 姿态四元数")  
+
+4）在输出位姿和真值数据所在路径下，使用evo工具进行评估算法的性能 （一般使用有闭环检测修正后输出的vio_loop.csv文件）  
+    1、绝对位姿误差   
+    evo_ape tum vio_loop.csv ~/data.tum -va --plot --plot_mode xyz  
+    2、相对位姿误差    
+    evo_rpe tum vio_loop.csv ~/data.tum -r full -va --plot --plot_mode xyz  
+
+5） 结果可视化  
+1、绝对位姿误差   
+![绝对位姿误差](./support_files/image/ape.png)  
+![绝对位姿误差map](./support_files/image/ape_map.png)  
+
+2、相对位姿误差  
+![相对位姿误差](./support_files/image/rpe.png)
+![相对位姿误差_map](./support_files/image/rpe_map.png)
